@@ -1,11 +1,20 @@
 package com.coursy.courses.controller
 
+import com.coursy.courses.dto.CourseRequest
+import com.coursy.courses.service.CourseService
+import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/courses")
-class CourseController {
+class CourseController(
+    val courseService: CourseService
+) {
 
 //    @GetMapping
 //    fun getAllCourses(
@@ -20,11 +29,36 @@ class CourseController {
 //    fun getCourseById(@PathVariable courseId: Long): ResponseEntity<CourseDetailsDto> {
 //        TODO("Get detailed course information by ID")
 //    }
-//
-//    @PostMapping
-//    fun createCourse(@RequestBody @Valid createCourseRequest: CreateCourseRequest): ResponseEntity<CourseDto> {
-//        TODO("Create new course for current tenant")
-//    }
+
+    @PostMapping
+    fun createCourse(
+        @RequestBody courseRequest: CourseRequest,
+        @AuthenticationPrincipal jwt: PreAuthenticatedAuthenticationToken
+    ): ResponseEntity<Any> {
+        val userEmail = jwt.principal as String
+        val isUser = jwt.authorities
+            .map { it.authority }
+            .contains("ROLE_USER")
+
+        val requestToValidate = if (isUser) {
+            courseRequest.copy(email = userEmail)
+        } else {
+            courseRequest
+        }
+
+        return requestToValidate
+            .validate()
+            .fold(
+                { validationErrors ->
+                    ResponseEntity.badRequest().body(validationErrors)
+                },
+                { validatedRequest ->
+                    courseService.saveCourse(validatedRequest)
+                    ResponseEntity.ok().build()
+                }
+            )
+    }
+
 //
 //    @PutMapping("/{courseId}")
 //    fun updateCourse(

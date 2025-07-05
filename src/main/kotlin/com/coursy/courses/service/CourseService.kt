@@ -1,6 +1,8 @@
 package com.coursy.courses.service
 
+import arrow.core.right
 import com.coursy.courses.CourseRepository
+import com.coursy.courses.dto.CourseRequest
 import org.springframework.stereotype.Service
 
 @Service
@@ -10,12 +12,11 @@ class CourseService(val repo: CourseRepository) {
 //            .findAll()
 //            .map(Course::toResponse)
 
-//    fun saveCourse(
-//        dto: CourseRequest.Validated,
-//        email: Email
-//    ) = repo
-//        .save(dto.toModel(email))
-//        .right()
+    fun saveCourse(
+        dto: CourseRequest.Validated,
+    ) = repo
+        .save(dto.toModel())
+        .right()
 
 //    fun deleteCourse(id: UUID) = repo.deleteById(id)
 

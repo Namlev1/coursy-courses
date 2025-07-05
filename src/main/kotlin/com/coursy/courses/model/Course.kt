@@ -9,7 +9,7 @@ import java.util.*
 class Course(
     @Id
     var id: UUID = UUID.randomUUID(),
-    var userEmail: String,
+    var email: String,
     var name: String,
     var description: String
 ) {
