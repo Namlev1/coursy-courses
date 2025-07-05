@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
+    kotlin("jvm") version "2.1.0"
+    kotlin("plugin.spring") version "2.1.0"
     id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -44,9 +44,9 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-assertions-arrow:2.0.0")
 
     // Security, JWT
-//    implementation("org.springframework.boot:spring-boot-starter-security")
-//    implementation("com.auth0:java-jwt:4.5.0")
-//    testImplementation("org.springframework.security:spring-security-test:6.4.5")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("com.auth0:java-jwt:4.5.0")
+    testImplementation("org.springframework.security:spring-security-test:6.4.5")
 }
 
 kotlin {
