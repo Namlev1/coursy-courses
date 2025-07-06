@@ -4,7 +4,6 @@ import com.coursy.courses.dto.CourseRequest
 import com.coursy.courses.service.CourseService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -34,7 +33,7 @@ class CourseController(
     @PostMapping
     fun createCourse(
         @RequestBody courseRequest: CourseRequest,
-        @AuthenticationPrincipal jwt: PreAuthenticatedAuthenticationToken
+        jwt: PreAuthenticatedAuthenticationToken
     ): ResponseEntity<Any> {
         val userEmail = jwt.principal as String
         val isUser = jwt.authorities
