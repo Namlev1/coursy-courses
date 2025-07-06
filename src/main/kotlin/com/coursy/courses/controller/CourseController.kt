@@ -2,13 +2,12 @@ package com.coursy.courses.controller
 
 import com.coursy.courses.dto.CourseRequest
 import com.coursy.courses.service.CourseService
+import com.coursy.courses.types.Email
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/courses")
@@ -24,24 +23,29 @@ class CourseController(
 //    ): ResponseEntity<Page<CourseDto>> {
 //        TODO("Get paginated list of courses for current tenant with optional search")
 //    }
-//
-//    @GetMapping("/{courseId}")
-//    fun getCourseById(@PathVariable courseId: Long): ResponseEntity<CourseDetailsDto> {
-//        TODO("Get detailed course information by ID")
-//    }
+
+    @GetMapping("/{courseId}")
+    fun getCourse(
+        @PathVariable courseId: UUID,
+        jwt: PreAuthenticatedAuthenticationToken
+    ): ResponseEntity<Any> {
+        return courseService
+            .getById(courseId, jwt)
+            .fold(
+                { ResponseEntity.badRequest().body(it.message()) },
+                { ResponseEntity.ok(it) }
+            )
+    }
 
     @PostMapping
     fun createCourse(
         @RequestBody courseRequest: CourseRequest,
         jwt: PreAuthenticatedAuthenticationToken
     ): ResponseEntity<Any> {
-        val userEmail = jwt.principal as String
-        val isUser = jwt.authorities
-            .map { it.authority }
-            .contains("ROLE_USER")
+        val (userEmail, isUser) = readToken(jwt)
 
         val requestToValidate = if (isUser) {
-            courseRequest.copy(email = userEmail)
+            courseRequest.copy(email = userEmail.value)
         } else {
             courseRequest
         }
@@ -57,6 +61,14 @@ class CourseController(
                     ResponseEntity.status(HttpStatus.CREATED).build()
                 }
             )
+    }
+
+    private fun readToken(jwt: PreAuthenticatedAuthenticationToken): Pair<Email, Boolean> {
+        val userEmail = jwt.principal as Email
+        val isUser = jwt.authorities
+            .map { it.authority }
+            .contains("ROLE_USER")
+        return Pair(userEmail, isUser)
     }
 
 //
