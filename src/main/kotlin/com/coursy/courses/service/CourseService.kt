@@ -10,8 +10,6 @@ import com.coursy.courses.dto.toResponse
 import com.coursy.courses.failure.AuthorizationFailure
 import com.coursy.courses.failure.CourseFailure
 import com.coursy.courses.failure.Failure
-import com.coursy.courses.model.Course
-import com.coursy.courses.types.Email
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
@@ -20,7 +18,10 @@ import java.util.*
 
 @Service
 @Transactional
-class CourseService(val repo: CourseRepository) {
+class CourseService(
+    val repo: CourseRepository,
+    val authorizationService: AuthorizationService
+) {
 //    fun getAllCourses(): List<CourseResponse> =
 //        repo
 //            .findAll()
@@ -49,31 +50,14 @@ class CourseService(val repo: CourseRepository) {
         val course = repo.findByIdOrNull(id)
             ?: return CourseFailure.NotFound(id).left()
 
-        if (!canAccessCourse(course, jwt))
+        if (!authorizationService.canAccessCourse(course, jwt))
             return AuthorizationFailure.UnauthorizedAccess.left()
 
         return course.toResponse().right()
-    }
-
-    private fun canAccessCourse(
-        course: Course,
-        jwt: PreAuthenticatedAuthenticationToken
-    ): Boolean {
-        val (userEmail, isUser) = readToken(jwt)
-        return !isUser || course.email != userEmail.value
     }
 
 //    fun getByUserEmail(email: Email) =
 //        repo.getByUserEmail(email.value)
 //            .map(Course::toResponse)
 
-    private fun readToken(
-        jwt: PreAuthenticatedAuthenticationToken
-    ): Pair<Email, Boolean> {
-        val userEmail = jwt.principal as Email
-        val isUser = jwt.authorities
-            .map { it.authority }
-            .contains("ROLE_USER")
-        return Pair(userEmail, isUser)
-    }
 }

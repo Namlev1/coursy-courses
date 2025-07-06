@@ -2,7 +2,7 @@ package com.coursy.courses.controller
 
 import com.coursy.courses.dto.CourseRequest
 import com.coursy.courses.service.CourseService
-import com.coursy.courses.types.Email
+import com.coursy.courses.service.JwtService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
@@ -12,7 +12,8 @@ import java.util.*
 @RestController
 @RequestMapping("/api/courses")
 class CourseController(
-    val courseService: CourseService
+    val courseService: CourseService,
+    val jwtService: JwtService
 ) {
 
 //    @GetMapping
@@ -42,7 +43,7 @@ class CourseController(
         @RequestBody courseRequest: CourseRequest,
         jwt: PreAuthenticatedAuthenticationToken
     ): ResponseEntity<Any> {
-        val (userEmail, isUser) = readToken(jwt)
+        val (userEmail, isUser) = jwtService.readToken(jwt)
 
         val requestToValidate = if (isUser) {
             courseRequest.copy(email = userEmail.value)
@@ -63,21 +64,14 @@ class CourseController(
             )
     }
 
-    private fun readToken(jwt: PreAuthenticatedAuthenticationToken): Pair<Email, Boolean> {
-        val userEmail = jwt.principal as Email
-        val isUser = jwt.authorities
-            .map { it.authority }
-            .contains("ROLE_USER")
-        return Pair(userEmail, isUser)
-    }
-
 //
 //    @PutMapping("/{courseId}")
 //    fun updateCourse(
-//        @PathVariable courseId: Long,
-//        @RequestBody @Valid updateCourseRequest: UpdateCourseRequest
-//    ): ResponseEntity<CourseDto> {
-//        TODO("Update existing course")
+//        @PathVariable courseId: UUID,
+//        @RequestBody updateCourseRequest: CourseRequest,
+//        jwt: PreAuthenticatedAuthenticationToken
+//    ): ResponseEntity<Any> {
+//        TODO()
 //    }
 //
 //    @DeleteMapping("/{courseId}")
