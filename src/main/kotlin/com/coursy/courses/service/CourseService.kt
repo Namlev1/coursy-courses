@@ -1,11 +1,12 @@
 package com.coursy.courses.service
 
-import arrow.core.right
 import com.coursy.courses.CourseRepository
 import com.coursy.courses.dto.CourseRequest
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
+@Transactional
 class CourseService(val repo: CourseRepository) {
 //    fun getAllCourses(): List<CourseResponse> =
 //        repo
@@ -16,7 +17,6 @@ class CourseService(val repo: CourseRepository) {
         dto: CourseRequest.Validated,
     ) = repo
         .save(dto.toModel())
-        .right()
 
 //    fun deleteCourse(id: UUID) = repo.deleteById(id)
 

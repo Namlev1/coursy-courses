@@ -2,6 +2,7 @@ package com.coursy.courses.controller
 
 import com.coursy.courses.dto.CourseRequest
 import com.coursy.courses.service.CourseService
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
@@ -54,7 +55,7 @@ class CourseController(
                 },
                 { validatedRequest ->
                     courseService.saveCourse(validatedRequest)
-                    ResponseEntity.ok().build()
+                    ResponseEntity.status(HttpStatus.CREATED).build()
                 }
             )
     }
