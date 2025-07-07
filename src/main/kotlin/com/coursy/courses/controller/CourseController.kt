@@ -3,7 +3,6 @@ package com.coursy.courses.controller
 import com.coursy.courses.dto.CourseCreationRequest
 import com.coursy.courses.dto.CourseUpdateRequest
 import com.coursy.courses.service.CourseService
-import com.coursy.courses.service.JwtService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
@@ -15,7 +14,6 @@ import java.util.*
 @RequestMapping("/api/courses")
 class CourseController(
     val courseService: CourseService,
-    val jwtService: JwtService
 ) {
 
 //    @GetMapping
