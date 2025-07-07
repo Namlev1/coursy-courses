@@ -30,8 +30,16 @@ class CourseService(
 
     fun saveCourse(
         dto: CourseCreationRequest.Validated,
-    ) = repo
-        .save(dto.toModel())
+        jwt: PreAuthenticatedAuthenticationToken
+    ): Either<Failure, CourseResponse> {
+        if (!authorizationService.canCreateCourse(dto, jwt))
+            return AuthorizationFailure.UnauthorizedAccess.left()
+
+        return repo
+            .save(dto.toModel())
+            .toResponse()
+            .right()
+    }
 
 //    fun deleteCourse(id: UUID) = repo.deleteById(id)
 

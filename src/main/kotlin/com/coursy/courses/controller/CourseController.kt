@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
+// todo improve error handling
 @RestController
 @RequestMapping("/api/courses")
 class CourseController(
@@ -44,23 +45,18 @@ class CourseController(
         @RequestBody courseRequest: CourseCreationRequest,
         jwt: PreAuthenticatedAuthenticationToken
     ): ResponseEntity<Any> {
-        val (userEmail, isUser) = jwtService.readToken(jwt)
-
-        val requestToValidate = if (isUser) {
-            courseRequest.copy(email = userEmail.value)
-        } else {
-            courseRequest
-        }
-
-        return requestToValidate
+        return courseRequest
             .validate()
             .fold(
                 { validationErrors ->
                     ResponseEntity.badRequest().body(validationErrors)
                 },
                 { validatedRequest ->
-                    courseService.saveCourse(validatedRequest)
-                    ResponseEntity.status(HttpStatus.CREATED).build()
+                    courseService.saveCourse(validatedRequest, jwt)
+                        .fold(
+                            { ResponseEntity.badRequest().body(it.message()) },
+                            { ResponseEntity.status(HttpStatus.CREATED).build() }
+                        )
                 }
             )
     }

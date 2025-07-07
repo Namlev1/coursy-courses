@@ -2,20 +2,18 @@ package com.coursy.courses.dto
 
 import arrow.core.Either
 import arrow.core.Nel
-import arrow.core.left
 import arrow.core.raise.either
 import arrow.core.raise.zipOrAccumulate
 import com.coursy.courses.failure.ValidationFailure
 import com.coursy.courses.model.Course
 import com.coursy.courses.types.Description
 import com.coursy.courses.types.Email
-import com.coursy.courses.types.EmailFailure
 import com.coursy.courses.types.Name
 
 data class CourseCreationRequest(
     val name: String,
     val description: String,
-    val email: String?
+    val email: String
 ) : SelfValidating<ValidationFailure, CourseCreationRequest.Validated> {
 
     data class Validated(
@@ -35,7 +33,7 @@ data class CourseCreationRequest(
             zipOrAccumulate(
                 { Description.create(description).bind() },
                 { Name.create(name).bind() },
-                { email?.let { Email.create(it).bind() } ?: EmailFailure.Empty.left().bind() }
+                { Email.create(email).bind() }
             ) { validDescription, validName, validEmail ->
                 Validated(
                     name = validName,
