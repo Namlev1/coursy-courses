@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service
 class AuthorizationService(
     val jwtService: JwtService
 ) {
-    fun canAccessCourse(
+    fun canUpdateCourse(
         course: Course,
         jwt: PreAuthenticatedAuthenticationToken
     ): Boolean {
         val (userEmail, isUser) = jwtService.readToken(jwt)
-        return !isUser || course.email != userEmail.value
+        return !isUser || course.email == userEmail.value
     }
 }

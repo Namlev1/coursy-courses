@@ -1,6 +1,7 @@
 package com.coursy.courses.controller
 
-import com.coursy.courses.dto.CourseRequest
+import com.coursy.courses.dto.CourseCreationRequest
+import com.coursy.courses.dto.CourseUpdateRequest
 import com.coursy.courses.service.CourseService
 import com.coursy.courses.service.JwtService
 import org.springframework.http.HttpStatus
@@ -40,7 +41,7 @@ class CourseController(
 
     @PostMapping
     fun createCourse(
-        @RequestBody courseRequest: CourseRequest,
+        @RequestBody courseRequest: CourseCreationRequest,
         jwt: PreAuthenticatedAuthenticationToken
     ): ResponseEntity<Any> {
         val (userEmail, isUser) = jwtService.readToken(jwt)
@@ -64,15 +65,29 @@ class CourseController(
             )
     }
 
-//
-//    @PutMapping("/{courseId}")
-//    fun updateCourse(
-//        @PathVariable courseId: UUID,
-//        @RequestBody updateCourseRequest: CourseRequest,
-//        jwt: PreAuthenticatedAuthenticationToken
-//    ): ResponseEntity<Any> {
-//        TODO()
-//    }
+
+    @PutMapping("/{courseId}")
+    fun updateCourse(
+        @PathVariable courseId: UUID,
+        @RequestBody courseRequest: CourseUpdateRequest,
+        jwt: PreAuthenticatedAuthenticationToken
+    ): ResponseEntity<Any> {
+        return courseRequest
+            .validate()
+            .fold(
+                { validationErrors ->
+                    val messages = validationErrors.map { it.message() }
+                    ResponseEntity.badRequest().body(mapOf("errors" to messages))
+                },
+                { validatedRequest ->
+                    courseService.update(courseId, validatedRequest, jwt)
+                        .fold(
+                            { failure -> ResponseEntity.badRequest().body(failure.message()) },
+                            { course -> ResponseEntity.ok(course) }
+                        )
+                }
+            )
+    }
 //
 //    @DeleteMapping("/{courseId}")
 //    fun deleteCourse(@PathVariable courseId: Long): ResponseEntity<Void> {

@@ -4,8 +4,9 @@ import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
 import com.coursy.courses.CourseRepository
-import com.coursy.courses.dto.CourseRequest
+import com.coursy.courses.dto.CourseCreationRequest
 import com.coursy.courses.dto.CourseResponse
+import com.coursy.courses.dto.CourseUpdateRequest
 import com.coursy.courses.dto.toResponse
 import com.coursy.courses.failure.AuthorizationFailure
 import com.coursy.courses.failure.CourseFailure
@@ -28,7 +29,7 @@ class CourseService(
 //            .map(Course::toResponse)
 
     fun saveCourse(
-        dto: CourseRequest.Validated,
+        dto: CourseCreationRequest.Validated,
     ) = repo
         .save(dto.toModel())
 
@@ -50,10 +51,32 @@ class CourseService(
         val course = repo.findByIdOrNull(id)
             ?: return CourseFailure.NotFound(id).left()
 
-        if (!authorizationService.canAccessCourse(course, jwt))
+        if (!authorizationService.canUpdateCourse(course, jwt))
             return AuthorizationFailure.UnauthorizedAccess.left()
 
         return course.toResponse().right()
+    }
+
+    fun update(
+        id: UUID,
+        dto: CourseUpdateRequest.Validated,
+        jwt: PreAuthenticatedAuthenticationToken,
+    ): Either<Failure, CourseResponse> {
+        val course = repo.findByIdOrNull(id)
+            ?: return CourseFailure.NotFound(id).left()
+
+        if (!authorizationService.canUpdateCourse(course, jwt))
+            return AuthorizationFailure.UnauthorizedAccess.left()
+
+        course.apply {
+            dto.name?.let { name = it.value }
+            dto.description?.let { description = it.value }
+        }
+
+        return repo
+            .save(course)
+            .toResponse()
+            .right()
     }
 
 //    fun getByUserEmail(email: Email) =
