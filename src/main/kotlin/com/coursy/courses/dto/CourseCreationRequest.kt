@@ -12,11 +12,11 @@ import com.coursy.courses.types.Email
 import com.coursy.courses.types.EmailFailure
 import com.coursy.courses.types.Name
 
-data class CourseRequest(
+data class CourseCreationRequest(
     val name: String,
     val description: String,
     val email: String?
-) : SelfValidating<ValidationFailure, CourseRequest.Validated> {
+) : SelfValidating<ValidationFailure, CourseCreationRequest.Validated> {
 
     data class Validated(
         val name: Name,
