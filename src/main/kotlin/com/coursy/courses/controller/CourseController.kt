@@ -10,11 +10,11 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
-// todo improve error handling
 @RestController
 @RequestMapping("/api/courses")
 class CourseController(
     val courseService: CourseService,
+    val httpFailureResolver: HttpFailureResolver
 ) {
 
     @GetMapping("/{courseId}")
@@ -25,7 +25,7 @@ class CourseController(
         return courseService
             .getById(courseId, jwt)
             .fold(
-                { ResponseEntity.badRequest().body(it.message()) },
+                { httpFailureResolver.handleFailure(it) },
                 { ResponseEntity.ok(it) }
             )
     }
@@ -50,13 +50,11 @@ class CourseController(
         return courseRequest
             .validate()
             .fold(
-                { validationErrors ->
-                    ResponseEntity.badRequest().body(validationErrors)
-                },
+                { httpFailureResolver.handleFailure(it) },
                 { validatedRequest ->
                     courseService.save(validatedRequest, jwt)
                         .fold(
-                            { ResponseEntity.badRequest().body(it.message()) },
+                            { httpFailureResolver.handleFailure(it) },
                             { ResponseEntity.status(HttpStatus.CREATED).build() }
                         )
                 }
@@ -73,14 +71,11 @@ class CourseController(
         return courseRequest
             .validate()
             .fold(
-                { validationErrors ->
-                    val messages = validationErrors.map { it.message() }
-                    ResponseEntity.badRequest().body(mapOf("errors" to messages))
-                },
+                { httpFailureResolver.handleFailure(it) },
                 { validatedRequest ->
                     courseService.update(courseId, validatedRequest, jwt)
                         .fold(
-                            { failure -> ResponseEntity.badRequest().body(failure.message()) },
+                            { httpFailureResolver.handleFailure(it) },
                             { course -> ResponseEntity.ok(course) }
                         )
                 }
@@ -95,7 +90,7 @@ class CourseController(
         return courseService
             .deleteById(courseId, jwt)
             .fold(
-                { failure -> ResponseEntity.badRequest().body(failure.message()) },
+                { httpFailureResolver.handleFailure(it) },
                 { ResponseEntity.status(HttpStatus.NO_CONTENT).build() }
             )
     }
