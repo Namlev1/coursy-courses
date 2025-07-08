@@ -1,0 +1,16 @@
+meta {
+  name: Get course page as USER
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{url}}?page=0&size=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 0
+  size: 10
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Update course as USER
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{url}}/:courseId
+  body: json
+  auth: bearer
+}
+
+params:path {
+  courseId: 6000aa40-7e25-4169-b0eb-aff5f0854557
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NTE5MTg2MDEsImV4cCI6MTc4MzQ1NDYwMSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoidGVzdEBlbWFpbC5jb20iLCJHaXZlbk5hbWUiOiJKb2hubnkiLCJTdXJuYW1lIjoiUm9ja2V0IiwiRW1haWwiOiJqcm9ja2V0QGV4YW1wbGUuY29tIiwicm9sZXMiOlsiVVNFUiIsIkNIQUQiXX0.5XLnF_HHC3IDHAStkoG2lXhPnxZjJRwPVDzGrHNETgE
+}
+
+body:json {
+  {
+    "name": "Changed name3"
+  }
+}

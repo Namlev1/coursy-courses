@@ -1,0 +1,19 @@
+meta {
+  name: Get course as ADMIN
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{url}}/:courseId
+  body: none
+  auth: bearer
+}
+
+params:path {
+  courseId: e115eed7-17ff-4a8c-8476-6e67e998da18
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSIsIm5hbWUiOiJKb2huIERvZSIsImFkbWluIjp0cnVlLCJpYXQiOjE3NTE3OTY4MDYsImV4cCI6MTc1MTgwMDQwNiwicm9sZXMiOlsiVVNFUiJdfQ.5tgeRjmhP6453aXwNuRHnvIAlT5Ek42Y6AwhbuGESws
+}

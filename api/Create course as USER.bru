@@ -1,0 +1,15 @@
+meta {
+  name: Create course as USER
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/user
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NTE2NTE1ODQsImV4cCI6MTc4MzE4NzU4NCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJyb2xlcyI6WyJVU0VSIiwiUHJvamVjdCBBZG1pbmlzdHJhdG9yIl19.DTLKPO-Ni9i43POIoQfRzSVbpKokW5jqMWCrJwHoR4A
+}

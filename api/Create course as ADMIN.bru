@@ -1,0 +1,23 @@
+meta {
+  name: Create course as ADMIN
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{url}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGVtYWlsLmNvbSIsIm5hbWUiOiJKb2huIERvZSIsImFkbWluIjp0cnVlLCJpYXQiOjE3NTE3OTY4MDYsImV4cCI6MTc1MTgwMDQwNiwicm9sZXMiOlsiVVNFUiJdfQ.5tgeRjmhP6453aXwNuRHnvIAlT5Ek42Y6AwhbuGESws
+}
+
+body:json {
+  {
+    "name": "Test course",
+    "description": "Test description",
+    "email": "mail@email.com"
+  }
+}
