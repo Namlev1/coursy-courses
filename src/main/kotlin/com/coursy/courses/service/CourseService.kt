@@ -12,7 +12,9 @@ import com.coursy.courses.failure.AuthorizationFailure
 import com.coursy.courses.failure.CourseFailure
 import com.coursy.courses.failure.Failure
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.stereotype.Service
 import java.util.*
@@ -21,7 +23,8 @@ import java.util.*
 @Transactional
 class CourseService(
     val repo: CourseRepository,
-    val authorizationService: AuthorizationService
+    val authorizationService: AuthorizationService,
+    private val pagedResourcesAssembler: PagedResourcesAssembler<CourseResponse>
 ) {
 //    fun getAllCourses(): List<CourseResponse> =
 //        repo
@@ -89,6 +92,12 @@ class CourseService(
             .toResponse()
             .right()
     }
+
+
+    fun getCoursePage(pageRequest: PageRequest) =
+        repo.findAll(pageRequest)
+            .map { it.toResponse() }
+            .let { pagedResourcesAssembler.toModel(it) }
 
 //    fun getByUserEmail(email: Email) =
 //        repo.getByUserEmail(email.value)

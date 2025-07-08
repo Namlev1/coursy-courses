@@ -3,6 +3,7 @@ package com.coursy.courses.controller
 import com.coursy.courses.dto.CourseCreationRequest
 import com.coursy.courses.dto.CourseUpdateRequest
 import com.coursy.courses.service.CourseService
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
@@ -16,15 +17,6 @@ class CourseController(
     val courseService: CourseService,
 ) {
 
-//    @GetMapping
-//    fun getAllCourses(
-//        @RequestParam(defaultValue = "0") page: Int,
-//        @RequestParam(defaultValue = "10") size: Int,
-//        @RequestParam(required = false) search: String?
-//    ): ResponseEntity<Page<CourseDto>> {
-//        TODO("Get paginated list of courses for current tenant with optional search")
-//    }
-
     @GetMapping("/{courseId}")
     fun getCourse(
         @PathVariable courseId: UUID,
@@ -37,6 +29,18 @@ class CourseController(
                 { ResponseEntity.ok(it) }
             )
     }
+
+    @GetMapping
+    fun getCourseList(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): ResponseEntity<Any> =
+        when {
+            arePageParamsInvalid(page, size) -> ResponseEntity.badRequest().build()
+            else -> PageRequest.of(page, size)
+                .let { courseService.getCoursePage(it) }
+                .let { ResponseEntity.ok(it) }
+        }
 
     @PostMapping
     fun createCourse(
@@ -105,4 +109,7 @@ class CourseController(
 //    fun unpublishCourse(@PathVariable courseId: Long): ResponseEntity<CourseDto> {
 //        TODO("Unpublish course (hide from students)")
 //    }
+
+    private fun arePageParamsInvalid(page: Int, size: Int) =
+        page < 0 || size <= 0
 }
