@@ -26,12 +26,7 @@ class CourseService(
     val authorizationService: AuthorizationService,
     private val pagedResourcesAssembler: PagedResourcesAssembler<CourseResponse>
 ) {
-//    fun getAllCourses(): List<CourseResponse> =
-//        repo
-//            .findAll()
-//            .map(Course::toResponse)
-
-    fun saveCourse(
+    fun save(
         dto: CourseCreationRequest.Validated,
         jwt: PreAuthenticatedAuthenticationToken
     ): Either<Failure, CourseResponse> {
@@ -94,13 +89,8 @@ class CourseService(
     }
 
 
-    fun getCoursePage(pageRequest: PageRequest) =
+    fun getPage(pageRequest: PageRequest) =
         repo.findAll(pageRequest)
             .map { it.toResponse() }
             .let { pagedResourcesAssembler.toModel(it) }
-
-//    fun getByUserEmail(email: Email) =
-//        repo.getByUserEmail(email.value)
-//            .map(Course::toResponse)
-
 }

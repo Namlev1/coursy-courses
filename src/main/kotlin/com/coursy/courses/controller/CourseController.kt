@@ -38,7 +38,7 @@ class CourseController(
         when {
             arePageParamsInvalid(page, size) -> ResponseEntity.badRequest().build()
             else -> PageRequest.of(page, size)
-                .let { courseService.getCoursePage(it) }
+                .let { courseService.getPage(it) }
                 .let { ResponseEntity.ok(it) }
         }
 
@@ -54,7 +54,7 @@ class CourseController(
                     ResponseEntity.badRequest().body(validationErrors)
                 },
                 { validatedRequest ->
-                    courseService.saveCourse(validatedRequest, jwt)
+                    courseService.save(validatedRequest, jwt)
                         .fold(
                             { ResponseEntity.badRequest().body(it.message()) },
                             { ResponseEntity.status(HttpStatus.CREATED).build() }
@@ -99,16 +99,6 @@ class CourseController(
                 { ResponseEntity.status(HttpStatus.NO_CONTENT).build() }
             )
     }
-
-//    @PatchMapping("/{courseId}/publish")
-//    fun publishCourse(@PathVariable courseId: Long): ResponseEntity<CourseDto> {
-//        TODO("Publish course (make it available to students)")
-//    }
-//
-//    @PatchMapping("/{courseId}/unpublish")
-//    fun unpublishCourse(@PathVariable courseId: Long): ResponseEntity<CourseDto> {
-//        TODO("Unpublish course (hide from students)")
-//    }
 
     private fun arePageParamsInvalid(page: Int, size: Int) =
         page < 0 || size <= 0
