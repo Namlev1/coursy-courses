@@ -82,12 +82,20 @@ class CourseController(
                 }
             )
     }
-//
-//    @DeleteMapping("/{courseId}")
-//    fun deleteCourse(@PathVariable courseId: Long): ResponseEntity<Void> {
-//        TODO("Delete course (soft delete)")
-//    }
-//
+
+    @DeleteMapping("/{courseId}")
+    fun deleteCourse(
+        @PathVariable courseId: UUID,
+        jwt: PreAuthenticatedAuthenticationToken
+    ): ResponseEntity<Any> {
+        return courseService
+            .deleteById(courseId, jwt)
+            .fold(
+                { failure -> ResponseEntity.badRequest().body(failure.message()) },
+                { ResponseEntity.status(HttpStatus.NO_CONTENT).build() }
+            )
+    }
+
 //    @PatchMapping("/{courseId}/publish")
 //    fun publishCourse(@PathVariable courseId: Long): ResponseEntity<CourseDto> {
 //        TODO("Publish course (make it available to students)")

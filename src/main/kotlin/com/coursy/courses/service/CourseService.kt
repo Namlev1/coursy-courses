@@ -41,16 +41,19 @@ class CourseService(
             .right()
     }
 
-//    fun deleteCourse(id: UUID) = repo.deleteById(id)
+    fun deleteById(
+        id: UUID,
+        jwt: PreAuthenticatedAuthenticationToken
+    ): Either<Failure, Unit> {
+        val course = repo.findByIdOrNull(id)
+            ?: return CourseFailure.NotFound(id).left()
 
-//    fun deleteCourse(platformId: Long, userEmail: Email): Either<CourseFailure, Unit> {
-//        val platform = repo.findByIdOrNull(platformId) ?: return CourseFailure.NotFound(platformId).left()
-//        if (platform.userEmail != userEmail.value)
-//            return CourseFailure.InvalidEmail(userEmail, platformId).left()
-//
-//        repo.deleteById(platformId)
-//        return Unit.right()
-//    }
+        if (!authorizationService.canUpdateCourse(course, jwt))
+            return AuthorizationFailure.UnauthorizedAccess.left()
+
+        repo.deleteById(id)
+        return Unit.right()
+    }
 
     fun getById(
         id: UUID,
