@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class JwtAuthenticationFilter : OncePerRequestFilter() {
-    private val logger = LoggerFactory.getLogger(this::class.java)
+    private val log = LoggerFactory.getLogger(this::class.java)
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -26,7 +26,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
         extractToken(request).map { token ->
             val jwt = JWT.decode(token)
             val email = Email.create(jwt.subject).getOrElse { failure ->
-                logger.warn("Invalid email format in JWT: ${jwt.subject}")
+                log.warn("Invalid email format in JWT: ${jwt.subject}")
                 response.status = 400
                 response.writer.write(failure.message())
                 return
