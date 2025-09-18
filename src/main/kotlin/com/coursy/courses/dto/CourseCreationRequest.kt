@@ -8,21 +8,25 @@ import com.coursy.courses.failure.ValidationFailure
 import com.coursy.courses.model.Course
 import com.coursy.courses.types.Description
 import com.coursy.courses.types.Name
+import java.net.URL
 import java.util.*
 
 data class CourseCreationRequest(
     val name: String,
     val description: String,
+    val imageURL: URL,
 ) : SelfValidating<ValidationFailure, CourseCreationRequest.Validated> {
 
     data class Validated(
         val name: Name,
         val description: Description,
+        val imageURL: URL
     ) {
         fun toModel(platformId: UUID) = Course(
-            name = this.name.value,
-            description = this.description.value,
-            platformId = platformId
+            name = name.value,
+            description = description.value,
+            imageUrl = imageURL.toString(),
+            platformId = platformId,
         )
     }
 
@@ -34,7 +38,8 @@ data class CourseCreationRequest(
             ) { validDescription, validName ->
                 Validated(
                     name = validName,
-                    description = validDescription
+                    description = validDescription,
+                    imageURL = imageURL,
                 )
             }
         }

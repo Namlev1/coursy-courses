@@ -11,7 +11,8 @@ class Course(
     var id: UUID = UUID.randomUUID(),
     var platformId: UUID,
     var name: String,
-    var description: String
+    var description: String,
+    var imageUrl: String,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
