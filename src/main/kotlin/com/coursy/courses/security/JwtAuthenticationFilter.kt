@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+import java.util.*
 
 @Component
 class JwtAuthenticationFilter : OncePerRequestFilter() {
@@ -31,13 +32,19 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
                 response.writer.write(failure.message())
                 return
             }
-            val roles = jwt.getClaim("roles")?.asList(String::class.java) ?: emptyList()
-            val authorities = roles.map { SimpleGrantedAuthority("ROLE_$it") }
+
+            val id = UUID.fromString(jwt.getClaim("id").asString())
+            val platformId = jwt.getClaim("platformId")?.asString()?.let { UUID.fromString(it) }
+
+            val roleString = jwt.getClaim("role")?.asString()
+            val authority = SimpleGrantedAuthority("ROLE_$roleString")
+
+            val principal = AuthenticatedUser(email, id, platformId)
 
             val authentication = PreAuthenticatedAuthenticationToken(
-                email,
-                token,
-                authorities
+                principal,
+                jwt,
+                listOf(authority)
             )
             authentication.isAuthenticated = true
             SecurityContextHolder.getContext().authentication = authentication

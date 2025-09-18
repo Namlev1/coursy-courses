@@ -7,24 +7,22 @@ import arrow.core.raise.zipOrAccumulate
 import com.coursy.courses.failure.ValidationFailure
 import com.coursy.courses.model.Course
 import com.coursy.courses.types.Description
-import com.coursy.courses.types.Email
 import com.coursy.courses.types.Name
+import java.util.*
 
 data class CourseCreationRequest(
     val name: String,
     val description: String,
-    val email: String
 ) : SelfValidating<ValidationFailure, CourseCreationRequest.Validated> {
 
     data class Validated(
         val name: Name,
         val description: Description,
-        val email: Email
     ) {
-        fun toModel() = Course(
+        fun toModel(platformId: UUID) = Course(
             name = this.name.value,
             description = this.description.value,
-            email = this.email.value
+            platformId = platformId
         )
     }
 
@@ -33,12 +31,10 @@ data class CourseCreationRequest(
             zipOrAccumulate(
                 { Description.create(description).bind() },
                 { Name.create(name).bind() },
-                { Email.create(email).bind() }
-            ) { validDescription, validName, validEmail ->
+            ) { validDescription, validName ->
                 Validated(
                     name = validName,
-                    description = validDescription,
-                    email = validEmail
+                    description = validDescription
                 )
             }
         }
