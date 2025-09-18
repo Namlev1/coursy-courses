@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -30,7 +31,7 @@ class CourseController(
             )
     }
 
-    @GetMapping("/{platformId}")
+    @GetMapping("/page/{platformId}")
     fun getCourseList(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
@@ -48,7 +49,7 @@ class CourseController(
     @PostMapping
     fun createCourse(
         @RequestBody courseRequest: CourseCreationRequest,
-        principal: AuthenticatedUser
+        @AuthenticationPrincipal principal: AuthenticatedUser
     ): ResponseEntity<Any> {
         return courseRequest
             .validate()
@@ -69,7 +70,7 @@ class CourseController(
     fun updateCourse(
         @PathVariable courseId: UUID,
         @RequestBody courseRequest: CourseUpdateRequest,
-        principal: AuthenticatedUser
+        @AuthenticationPrincipal principal: AuthenticatedUser
     ): ResponseEntity<Any> {
         return courseRequest
             .validate()
@@ -89,7 +90,7 @@ class CourseController(
     @DeleteMapping("/{courseId}")
     fun deleteCourse(
         @PathVariable courseId: UUID,
-        principal: AuthenticatedUser
+        @AuthenticationPrincipal principal: AuthenticatedUser
     ): ResponseEntity<Any> {
         return courseService
             .deleteById(courseId, principal)

@@ -37,7 +37,7 @@ class JwtAuthenticationFilter : OncePerRequestFilter() {
             val platformId = jwt.getClaim("platformId")?.asString()?.let { UUID.fromString(it) }
 
             val roleString = jwt.getClaim("role")?.asString()
-            val authority = SimpleGrantedAuthority("ROLE_$roleString")
+            val authority = SimpleGrantedAuthority(roleString)
 
             val principal = AuthenticatedUser(email, id, platformId)
 
