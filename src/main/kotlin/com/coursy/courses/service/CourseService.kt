@@ -18,6 +18,8 @@ import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -90,10 +92,13 @@ class CourseService(
             .right()
     }
 
-    fun getPage(pageRequest: PageRequest, platformId: UUID) =
-        repo.findAllByPlatformId(platformId, pageRequest)
+    fun getPage(pageRequest: PageRequest, platformId: UUID): PagedModel<EntityModel<CourseResponse?>?> {
+        val page = repo.findAllByPlatformId(platformId, pageRequest)
+
+        return page
             .map { it.toResponse() }
             .let { pagedResourcesAssembler.toModel(it) }
+    }
 
     private fun canAccess(platformId: UUID?, course: Course): Boolean =
         platformId == null || course.platformId != platformId
