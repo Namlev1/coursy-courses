@@ -14,18 +14,18 @@ import java.util.*
 data class CourseCreationRequest(
     val name: String,
     val description: String,
-    val imageURL: URL,
+    val imageUrl: URL,
 ) : SelfValidating<ValidationFailure, CourseCreationRequest.Validated> {
 
     data class Validated(
         val name: Name,
         val description: Description,
-        val imageURL: URL
+        val imageUrl: URL
     ) {
         fun toModel(platformId: UUID) = Course(
             name = name.value,
             description = description.value,
-            imageUrl = imageURL.toString(),
+            imageUrl = imageUrl.toString(),
             platformId = platformId,
         )
     }
@@ -39,7 +39,7 @@ data class CourseCreationRequest(
                 Validated(
                     name = validName,
                     description = validDescription,
-                    imageURL = imageURL,
+                    imageUrl = imageUrl,
                 )
             }
         }
