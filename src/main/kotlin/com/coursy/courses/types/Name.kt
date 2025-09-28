@@ -8,7 +8,7 @@ import com.coursy.courses.failure.NameFailure
 @JvmInline
 value class Name private constructor(val value: String) {
     companion object {
-        private const val MIN_LENGTH = 2
+        private const val MIN_LENGTH = 5
         private const val MAX_LENGTH = 50
 
         fun create(value: String): Either<NameFailure, Name> = when {

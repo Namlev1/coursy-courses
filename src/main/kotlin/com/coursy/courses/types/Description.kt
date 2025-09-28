@@ -8,8 +8,8 @@ import com.coursy.courses.failure.DescriptionFailure
 @JvmInline
 value class Description private constructor(val value: String) {
     companion object {
-        private const val MIN_LENGTH = 2
-        private const val MAX_LENGTH = 50
+        private const val MIN_LENGTH = 1
+        private const val MAX_LENGTH = 4000
 
         fun create(value: String): Either<DescriptionFailure, Description> = when {
             value.isEmpty() -> DescriptionFailure.Empty.left()
