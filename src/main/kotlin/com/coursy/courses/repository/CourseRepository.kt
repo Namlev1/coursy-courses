@@ -1,4 +1,4 @@
-package com.coursy.courses
+package com.coursy.courses.repository
 
 import com.coursy.courses.model.Course
 import org.springframework.data.domain.Page

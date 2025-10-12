@@ -13,6 +13,7 @@ class Course(
     var name: String,
     var description: String,
     var imageUrl: String,
+    var videoNum: Int = 0,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

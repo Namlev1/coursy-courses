@@ -59,7 +59,7 @@ class CourseController(
                     courseService.save(validatedRequest, principal)
                         .fold(
                             { httpFailureResolver.handleFailure(it) },
-                            { ResponseEntity.status(HttpStatus.CREATED).build() }
+                            { ResponseEntity.status(HttpStatus.CREATED).body(it) }
                         )
                 }
             )

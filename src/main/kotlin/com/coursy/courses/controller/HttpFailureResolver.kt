@@ -1,10 +1,7 @@
 package com.coursy.courses.controller
 
 import arrow.core.Nel
-import com.coursy.courses.failure.AuthorizationFailure
-import com.coursy.courses.failure.CourseFailure
-import com.coursy.courses.failure.Failure
-import com.coursy.courses.failure.ValidationFailure
+import com.coursy.courses.failure.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -21,6 +18,9 @@ class HttpFailureResolver {
 
             // Courses
             is CourseFailure.NotFound -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(failure.message())
+
+            // UserCourses
+            is UserCourseFailure.NotFound -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(failure.message())
 
             else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failure.message())
         }

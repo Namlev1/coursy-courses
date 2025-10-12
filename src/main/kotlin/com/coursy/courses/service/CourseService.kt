@@ -3,7 +3,6 @@ package com.coursy.courses.service
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import com.coursy.courses.CourseRepository
 import com.coursy.courses.dto.CourseCreationRequest
 import com.coursy.courses.dto.CourseResponse
 import com.coursy.courses.dto.CourseUpdateRequest
@@ -13,6 +12,7 @@ import com.coursy.courses.failure.CourseFailure
 import com.coursy.courses.failure.Failure
 import com.coursy.courses.failure.InvalidStateFailure
 import com.coursy.courses.model.Course
+import com.coursy.courses.repository.CourseRepository
 import com.coursy.courses.security.AuthenticatedUser
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.PageRequest
