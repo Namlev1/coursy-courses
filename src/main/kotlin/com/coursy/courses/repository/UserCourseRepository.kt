@@ -6,4 +6,5 @@ import java.util.*
 
 interface UserCourseRepository : JpaRepository<UserCourse, UUID> {
     fun getUserCoursesByUserId(userId: UUID): MutableList<UserCourse>
+    fun getByUserIdAndCourseId(userId: UUID, courseId: UUID): UserCourse?
 }

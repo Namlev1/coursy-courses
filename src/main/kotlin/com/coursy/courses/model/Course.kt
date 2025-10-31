@@ -12,7 +12,7 @@ class Course(
     var platformId: UUID,
     var name: String,
     var description: String,
-    var imageUrl: String,
+    var imageUrl: String?,
     var videoNum: Int = 0,
 ) {
     override fun equals(other: Any?): Boolean {

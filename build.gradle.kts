@@ -51,6 +51,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.auth0:java-jwt:4.5.0")
     testImplementation("org.springframework.security:spring-security-test:6.4.5")
+
+    // minIo
+    implementation("io.minio:minio:8.5.17")
 }
 
 kotlin {

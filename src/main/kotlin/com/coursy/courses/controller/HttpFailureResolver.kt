@@ -21,6 +21,8 @@ class HttpFailureResolver {
 
             // UserCourses
             is UserCourseFailure.NotFound -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(failure.message())
+            is UserCourseFailure.NotFoundByUserAndVideo -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(failure.message())
 
             else -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failure.message())
         }

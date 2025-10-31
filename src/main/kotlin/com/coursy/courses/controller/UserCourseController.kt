@@ -34,6 +34,19 @@ class UserCourseController(
             .let { ResponseEntity.ok(it) }
     }
 
+    @GetMapping("/me/course/{courseId}")
+    fun getCurrentUserCourseByCourseId(
+        @AuthenticationPrincipal principal: AuthenticatedUser,
+        @PathVariable courseId: UUID
+    ): ResponseEntity<Any> {
+        return userCourseService
+            .getByUserIdAndCourseId(principal.id, courseId)
+            .fold(
+                { httpFailureResolver.handleFailure(it) },
+                { userCourse -> ResponseEntity.ok(userCourse) }
+            )
+    }
+
     @GetMapping("/{id}")
     fun getUserCourse(
         @PathVariable id: UUID

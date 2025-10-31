@@ -27,6 +27,13 @@ class UserCourseService(
             .getUserCoursesByUserId(userId)
             .map { UserCourseToDto.map(it) }
 
+    fun getByUserIdAndCourseId(userId: UUID, videoId: UUID): Either<UserCourseFailure, UserCourseDto> {
+        val userCourse = userCourseRepository
+            .getByUserIdAndCourseId(userId, videoId)
+            ?: return UserCourseFailure.NotFoundByUserAndVideo(userId, videoId).left()
+        return UserCourseToDto.map(userCourse).right()
+    }
+
     fun getByUserCourseId(id: UUID): Either<UserCourseFailure, UserCourseDto> {
         val userCourse = userCourseRepository.findByIdOrNull(id)
             ?: return UserCourseFailure.NotFound(id).left()

@@ -24,8 +24,7 @@ class SecurityConfig {
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { http ->
                 http
-//                    .requestMatchers("/courses/public/**").permitAll()
-//                    .anyRequest().authenticated()
+                    .requestMatchers("/api/courses/user-courses/**").authenticated()
                     .anyRequest().permitAll()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
