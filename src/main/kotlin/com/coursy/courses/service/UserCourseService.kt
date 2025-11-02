@@ -59,7 +59,7 @@ class UserCourseService(
         userCourse.apply {
             progress = dto.progress
             finishedDay = dto.finishedDay
-            currentVideo = dto.currentVideo
+            currentContent = dto.currentContent
         }
 
         return UserCourseToDto.map(userCourse).right()

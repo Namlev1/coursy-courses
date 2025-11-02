@@ -10,5 +10,5 @@ data class UserCourseDto(
     var courseId: UUID,
     var progress: ProgressStatus,
     var finishedDay: LocalDate?,
-    var currentVideo: UUID
+    var currentContent: UUID
 )

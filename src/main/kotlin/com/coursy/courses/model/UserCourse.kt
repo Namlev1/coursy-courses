@@ -16,7 +16,7 @@ class UserCourse(
     @Enumerated(EnumType.STRING)
     var progress: ProgressStatus,
     var finishedDay: LocalDate? = null,
-    var currentVideo: UUID
+    var currentContent: UUID
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
