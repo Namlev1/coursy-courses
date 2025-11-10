@@ -51,7 +51,7 @@ class CourseService(
 
         val platformId = principal.platformId
 
-        if (!canAccess(platformId, course)) {
+        if (canNotAccess(platformId, course)) {
             return AuthorizationFailure.UnauthorizedAccess.left()
         }
 
@@ -77,7 +77,7 @@ class CourseService(
             ?: return CourseFailure.NotFound(id).left()
 
         val platformId = principal.platformId
-        if (!canAccess(platformId, course)) {
+        if (canNotAccess(platformId, course)) {
             return AuthorizationFailure.UnauthorizedAccess.left()
         }
 
@@ -100,6 +100,6 @@ class CourseService(
             .let { pagedResourcesAssembler.toModel(it) }
     }
 
-    private fun canAccess(platformId: UUID?, course: Course): Boolean =
+    private fun canNotAccess(platformId: UUID?, course: Course): Boolean =
         platformId == null || course.platformId != platformId
 }
