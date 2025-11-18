@@ -71,7 +71,6 @@ class CourseController(
         }
 
 
-    //    @PreAuthorize("hasAnyRole('HOST_OWNER', 'HOST_ADMIN', 'PLATFORM_OWNER', 'PLATFORM_ADMIN')")
     @PostMapping
     fun createCourse(
         @AuthenticationPrincipal principal: AuthenticatedUser,

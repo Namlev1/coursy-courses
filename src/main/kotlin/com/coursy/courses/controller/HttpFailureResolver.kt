@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service
 class HttpFailureResolver {
     fun handleFailure(failure: Failure): ResponseEntity<Any> =
         when (failure) {
-            // Validation
+
             is ValidationFailure -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failure.message())
 
-            // Authorization
+
             is AuthorizationFailure -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(failure.message())
 
-            // Courses
+
             is CourseFailure.NotFound -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(failure.message())
 
-            // UserCourses
+
             is UserCourseFailure.NotFound -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(failure.message())
             is UserCourseFailure.NotFoundByUserAndVideo -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(failure.message())
